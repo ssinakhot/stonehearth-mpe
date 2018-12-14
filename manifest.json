@@ -1,0 +1,13 @@
+{
+   "info": {
+      "name": "Stonehearth Headless Server",
+      "namespace": "stonehearth_headless",
+      "version": 3
+   },
+   "author": "Steven Sinakhot",
+   "dependencies": [
+      "stonehearth",
+      "radiant"
+   ],
+   "default_locale": "en",
+}
