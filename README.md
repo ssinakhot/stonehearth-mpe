@@ -16,6 +16,7 @@ With v1.1 of Stonehearth, there are a few missing lua code to properly run a hea
 
 ## User-Friendly Features
 
+- [X] Pass arguments to the executable rather than through json config
 - [ ] Allow clients to trigger the save functionality
 - [ ] When client connects, update their multiplayer settings to show multiplayer is enabled on client and the number of max_players
 - [ ] Allow client to specify IP address to connect to.

@@ -1,0 +1,1 @@
+./Stonehearth.exe --multiplayer.server.headless.enabled=true --multiplayer.server.headless.max_player=4 --multiplayer.server.headless.saveid=''

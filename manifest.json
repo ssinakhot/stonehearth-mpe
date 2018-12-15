@@ -10,4 +10,11 @@
       "radiant"
    ],
    "default_locale": "en",
+   "server_init_script": "file(stonehearth_headless_server)",
+   "functions": {
+      "save_game": {
+         "controller": "file(call_handlers/save_game_call_handler.lua)",
+         "endpoint": "server"
+      }
+    }
 }
