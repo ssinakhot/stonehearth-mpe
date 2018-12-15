@@ -9,7 +9,8 @@ With v1.1 of Stonehearth, there are a few missing lua code to properly run a hea
 
 - [ ] Server-side Saving
 - [ ] Auto-Save 
-- [ ] Allow headless server to auto-generate world and accept new connections
+- [X] Allow headless server to auto-generate world and accept new connections
+- [ ] Properly setup a multiplayer game when using auto-generation
 - [ ] Get the config settings that are possible for auto generation
 - [ ] On loading of existing save, turn on the multiplayer settings and max_player settings
 - [ ] Pull max_player from "multiplayer.server.headless.max_players"
