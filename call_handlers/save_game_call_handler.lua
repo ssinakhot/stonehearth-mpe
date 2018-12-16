@@ -1,7 +1,7 @@
 
-local SaveGameHandler = class()
+local SaveGameCallHandler = class()
 
-function SaveGameHandler:save_game(session, response)
+function SaveGameCallHandler:save_game(session, response)
     local saveid = 'Test'
     _radiant.call('radiant:client:save_game', saveid)
       :done(function(r)
@@ -24,5 +24,5 @@ function SaveGameHandler:save_game(session, response)
     return true
 end
 
-return SaveGameHandler
+return SaveGameCallHandler
 

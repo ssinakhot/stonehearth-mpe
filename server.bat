@@ -1,1 +1,1 @@
-./Stonehearth.exe --multiplayer.server.headless.enabled=true
+./Stonehearth.exe --multiplayer.server.headless.enabled=true --multiplayer.server.headless.saveid="" --multiplayer.server.headless.max_player=4 --multiplayer.server.headless.saveid='' --multiplayer.server.default.max_players=5 --multiplayer.server.remote_connections_enabled=true

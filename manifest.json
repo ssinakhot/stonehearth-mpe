@@ -1,7 +1,7 @@
 {
    "info": {
-      "name": "Stonehearth Headless Server",
-      "namespace": "stonehearth_headless",
+      "name": "Stonehearth Multiplayer Enhanced",
+      "namespace": "stonehearth_mpe",
       "version": 3
    },
    "author": "Steven Sinakhot",
@@ -10,8 +10,13 @@
       "radiant"
    ],
    "default_locale": "en",
-   "server_init_script": "file(stonehearth_headless_server)",
+   "client_init_script": "file(stonehearth_mpe_client)",
+   "server_init_script": "file(stonehearth_mpe_server)",
    "functions": {
+      "is_player_host": {
+         "controller": "file(call_handlers/player_call_handler.lua)",
+         "endpoint": "server"
+      },
       "save_game": {
          "controller": "file(call_handlers/save_game_call_handler.lua)",
          "endpoint": "client"
