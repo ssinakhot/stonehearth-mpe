@@ -6,6 +6,7 @@ local service_creation_order = {
 }
 
 local monkey_patches = {
+    mpe_building_client_service = 'stonehearth.services.client.building.building_client_service',
     mpe_client = _radiant.client,
 }
 
