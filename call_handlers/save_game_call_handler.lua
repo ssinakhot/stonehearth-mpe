@@ -2,13 +2,7 @@
 local SaveGameCallHandler = class()
 
 function SaveGameCallHandler:save_game(session, response)
-    local saveid = 'Test'
-    _radiant.call('radiant:client:save_game', saveid)
-      :done(function(r)
-            print(r)
-         end)
-               --[[
-    radiant.call("radiant:client:save_game", saveid, {
+    _radiant.call("radiant:client:save_game", saveid, {
                name: 'Test',
                town_name: 'Headless Server',
                game_date: gameDate,
@@ -20,7 +14,6 @@ function SaveGameCallHandler:save_game(session, response)
                   soldiers: App.jobController.getNumSoldiers(),
                }
             });  
-               --]]
     return true
 end
 

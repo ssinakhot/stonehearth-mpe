@@ -3,12 +3,26 @@ Stonehearth Multiplayer Enhancements
 
 This mod focuses on being able run a headless server and extending multiplayer modes by adding a "game master" host.
 
+Save a game and update the host field in server_metadata.json with your session information. Your player_id is either develop_1 or steam_1
+
+    {
+        'player_id': 'develop_1',
+        'client_id': 'GUID',
+        'provider': 'develop
+    }
+
+radiant:client:save_game will trigger a save on the server if the client is connected as a 'host'. You can specify your host in an existing save game by modifying server_metadata.json with the correct user session information.
+
+radiant:client:restart will trigger a restart of the game on the server side! the new_game event will kick in but the headless:init wont be triggered. 
+
+To trigger a load on the server without restarting the server program. You can call 'radiant:client:load_game_async'. This however, will disconnect the client. The client will need to be restarted. 
+
 # Task List
 
 ## Required Features 
 These features will set the base of the mod to allow headless server multiplayer functionality.
 
-- [ ] Headless Game Saving
+- [~] Headless Game Saving (Only pre-loaded save games)
 - [ ] Auto-Save feature
 - [X] Allow headless server to auto-generate world
 - [X] Assign first player to become host
@@ -21,7 +35,7 @@ These features will set the base of the mod to allow headless server multiplayer
 
 - [ ] Client Launcher
 - [ ] Game Master mode, allow a player to act as a game master creating their own story by spawning entities and controlling them
-- [ ] Allow clients to trigger the save functionality
+- [~] Allow host client to trigger the save functionality (Only pre-loaded save games)
 - [X] When client connects, update their multiplayer settings to show multiplayer is enabled on client and the number of max_players
 - [ ] Allow client to specify IP address to connect to.
 - [ ] Headless Server Side Launcher which allows you to specify world generation settings or the save file to load
@@ -71,16 +85,11 @@ Example setting:
     }
 
 ## Saving the game
-'radiant:client:save_game' only works on client side. The current thoughts are that it gets triggered on client side for a screenshot then a server side call is down in the internal C++ code.
+'radiant:client:save_game' only works on client side. There is a check on the server side to only allow 'host' player to execute the save. This is set when the host provider connects or when loaded from the server_metadata.json file for a save_game.
+
 'radiant:server:save' exists, but crashes if called directly to the server. Assembly code kind of indicates this is where the save actually happens.
 
-according to stonehearthd.dll, the following strings are available related to 'save_game'
-'radiant:client:save_game'   (tested) => leads only screenshots
-'radiant:client:delete_save_game'
-'radiant:client:get_save_games'
-'headless_save_game' => this is most likely the string to set the default saveid for a headless.enabled=true setting
-
-may have to use dll injection to add in hooks to allow saving the game to be called from server side.
+Maybe able to use dll injection to load in the player_id as host when the game loads.
 
 ## Bugs
 

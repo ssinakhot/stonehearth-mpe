@@ -2,7 +2,7 @@
 
 :: Multiplayer Client Options
 SET remote_server_enabled=false
-::SET remote_server_address="127.4.0.1"
+SET remote_server_address="98.23.123.142"
 SET remote_server_port=57094
 
 :: Multiplayer Server Options
@@ -27,10 +27,10 @@ call :random seed3
 
 Stonehearth.exe ^
     --multiplayer.remote_server.enabled=%remote_server_enabled% ^
-::    --multiplayer.remote_server.ip=%remote_server_ip% ^
     --multiplayer.remote_server.port=%remote_server_port% ^
     --multiplayer.server.headless.enabled=%server_enabled% ^
     --multiplayer.server.headless.saveid=%load_save_file% ^
+    --multiplayer.remote_server.ip=%remote_server_ip% 
 ::    --multiplayer.server.ip=%server_ip% ^
 ::    --multiplayer.server.port=%server_port% ^
 ::    --multiplayer.server.headless.options.seed=%seed% ^
