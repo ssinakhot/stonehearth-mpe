@@ -9,7 +9,7 @@ SET remote_server_port=57094
 SET server_enabled=true
 ::SET server_ip=0.0.5.0
 ::SET server_port=57095
-SET load_save_file="headless_save_game"
+SET load_save_file=""
 
 :: World Generation Game Options
 call :random seed1

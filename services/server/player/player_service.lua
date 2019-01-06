@@ -48,7 +48,7 @@ end
 function PlayerService:remove_host()
     if stonehearth.player:get_players()['player_1'] then
         self._sv.players['player_1'] = nil
-        --stonehearth_mpe.player:destroy_player('player_1')
+        stonehearth_mpe.player:destroy_player('player_1')
         radiant.log.write('stonehearth_mpe', 0, 'Remove original host \'player_1\'')
     end  
 end

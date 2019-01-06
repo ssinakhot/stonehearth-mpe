@@ -3,7 +3,7 @@ stonehearth_mpe = {
 }
 
 local service_creation_order = {
-    'player'
+    { player = 'stonehearth_mpe.services.server.player.player_service' }
 }
 
 local monkey_patches = {
@@ -18,24 +18,6 @@ local function monkey_patching()
       local monkey_do = type(into) == "string" and radiant.mods.require(into) or into
       radiant.mixin(monkey_do, monkey_see)
    end
-end
-
-local function create_service(name)
-   local path = string.format('services.server.%s.%s_service', name, name)
-   local service = require(path)()
-
-   local saved_variables = stonehearth_mpe._sv[name]
-   if not saved_variables then
-      saved_variables = radiant.create_datastore()
-      stonehearth_mpe._sv[name] = saved_variables
-   end
-
-   service.__saved_variables = saved_variables
-   service._sv = saved_variables:get_data()
-   saved_variables:set_controller(service)
-   saved_variables:set_controller_name('stonehearth_mpe:' .. name)
-   service:initialize()
-   stonehearth_mpe[name] = service
 end
 
 local function setup_multiplayer()
@@ -62,7 +44,6 @@ end
 function stonehearth_mpe:_on_world_generation_complete()
     setup_multiplayer()
     radiant.log.write('stonehearth_mpe', 0, 'Multiplayer initialized - New Game')
-    _radiant.call('radiant:server:save', 'test')
 end
 
 -- this is triggered when a save game isn't loaded 
@@ -80,10 +61,9 @@ end
 function stonehearth_mpe:_on_init() 
   -- print(radiant.util.get_global_config('multiplayer', {}))
    stonehearth_mpe._sv = stonehearth_mpe.__saved_variables:get_data()
+   radiant.service_creation_order.create_services(stonehearth_mpe, 'stonehearth_mpe', service_creation_order)
 
-   for _, name in ipairs(service_creation_order) do
-      create_service(name)
-   end
+   setup_multiplayer()
 
    radiant.log.write('stonehearth_mpe', 0, 'Server initialized')
 end
@@ -104,6 +84,14 @@ if headless_enabled then
 end
 
 local event_test = {
+    'radiant:shut_down',
+    'radiant:get_host_data',
+    'radiant:exit',
+    'radiant:client:load_game',
+    'radiant:client:restart',
+    'radiant:client:return_to_main_menu',
+    'radiant:client_removed',
+    'radiant:server:restart',
     'radiant:save',
     'radiant:server:save_game',
     'radiant:client:save_game',
