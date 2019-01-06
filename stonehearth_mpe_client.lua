@@ -37,12 +37,23 @@ function stonehearth_mpe:_on_required_loaded()
    monkey_patching()
 end
 
+function stonehearth_mpe:_on_server_ready()
+   _radiant.call('stonehearth_mpe:is_headless_mode_enabled'):done(function(r)
+      stonehearth_mpe.headless_enabled = r.result;
+      if stonehearth_mpe.headless_enabled then
+         monkey_patching(true)
+      end
+   end)
+end
+
+-- joining a remote game
 function stonehearth_mpe:_on_game_joined()
-   local result = _radiant.call('stonehearth_mpe:is_headless_mode')
+   print('remote game joined')
 end
 
 radiant.events.listen(stonehearth_mpe, 'radiant:init', stonehearth_mpe, stonehearth_mpe._on_init)
 radiant.events.listen(radiant, 'radiant:required_loaded', stonehearth_mpe, stonehearth_mpe._on_required_loaded)
 radiant.events.listen(radiant, 'radiant:client:game_joined', stonehearth_mpe, stonehearth_mpe._on_game_joined)
+radiant.events.listen(radiant, 'radiant:client:server_ready', stonehearth_mpe, stonehearth_mpe._on_server_ready)
 
 return stonehearth_mpe

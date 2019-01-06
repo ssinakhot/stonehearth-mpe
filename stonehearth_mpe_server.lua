@@ -7,17 +7,25 @@ local service_creation_order = {
 }
 
 local monkey_patches = {
+
+}
+
+local monkey_patches_headless = {
     mpe_building_service = 'stonehearth.services.server.building.building_service',
     mpe_sim = _radiant.sim,
 }
 
-local function monkey_patching()
-   for from, into in pairs(monkey_patches) do
-      
-      local monkey_see = require('monkey_patches.' .. from)
-      local monkey_do = type(into) == "string" and radiant.mods.require(into) or into
-      radiant.mixin(monkey_do, monkey_see)
-   end
+local function monkey_patching(headless)
+    local patches = monkey_patches
+    if headless then
+        patches = monkey_patches_headless
+    end
+    for from, into in pairs(patches) do
+        
+        local monkey_see = require('monkey_patches.' .. from)
+        local monkey_do = type(into) == "string" and radiant.mods.require(into) or into
+        radiant.mixin(monkey_do, monkey_see)
+    end
 end
 
 local function setup_headless_multiplayer()
@@ -107,6 +115,9 @@ end
 
 function stonehearth_mpe:_on_required_loaded()
     monkey_patching()
+    if stonehearth_mpe.headless_enabled then
+        monkey_patches(true)
+    end
 end
 
 radiant.events.listen(stonehearth, 'radiant:new_game', stonehearth_mpe, stonehearth_mpe._on_new_game)
