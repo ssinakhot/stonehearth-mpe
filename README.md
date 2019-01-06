@@ -17,12 +17,17 @@ radiant:client:restart will trigger a restart of the game on the server side! th
 
 To trigger a load on the server without restarting the server program. You can call 'radiant:client:load_game_async'. This however, will disconnect the client. The client will need to be restarted. 
 
+# Features
+
+- Remote players can join before host player places his camp
+- Auto-enable multiplayer settings when running a headless server with auto-generation
+
 # Task List
 
 ## Required Features 
 These features will set the base of the mod to allow headless server multiplayer functionality.
 
-- [~] Headless Game Saving (Only pre-loaded save games)
+- [ ] Headless Game Saving (Only pre-loaded save games)
 - [ ] Auto-Save feature
 - [X] Allow headless server to auto-generate world
 - [X] Assign first player to become host
@@ -33,9 +38,10 @@ These features will set the base of the mod to allow headless server multiplayer
 
 ## Main Features
 
+- [X] Allow clients to join before host places camp
 - [ ] Client Launcher
 - [ ] Game Master mode, allow a player to act as a game master creating their own story by spawning entities and controlling them
-- [~] Allow host client to trigger the save functionality (Only pre-loaded save games)
+- [ ] Allow host client to trigger the save functionality (Only pre-loaded save games)
 - [X] When client connects, update their multiplayer settings to show multiplayer is enabled on client and the number of max_players
 - [ ] Allow client to specify IP address to connect to.
 - [ ] Headless Server Side Launcher which allows you to specify world generation settings or the save file to load

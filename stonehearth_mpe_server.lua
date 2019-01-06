@@ -3,7 +3,7 @@ stonehearth_mpe = {
 }
 
 local service_creation_order = {
-    { player = 'stonehearth_mpe.services.server.player.player_service' }
+    { player = 'stonehearth_mpe.services.server.player.player_service' },
 }
 
 local monkey_patches = {
@@ -20,10 +20,46 @@ local function monkey_patching()
    end
 end
 
-local function setup_multiplayer()
+local function setup_headless_multiplayer()
    stonehearth.session_server:set_remote_connections_enabled(true)
    stonehearth.session_server:set_max_players(8)
    stonehearth.game_speed:set_anarchy_enabled(true)
+end
+
+local function setup_multiplayer()
+    local game_options = {}
+    if stonehearth_mpe.headless_enabled then
+        game_options.remote_connections_enabled = true
+        game_options.max_players = 8
+        game_options.game_speed_anarchy_enabled = true
+    else 
+        -- the default host player id should be player_1
+        local host_player_id = 'player_1'
+        if host_player_id ~= '' then
+            local pop = stonehearth.population:get_population(host_player_id)
+            game_options = pop:get_game_options()
+        else
+            radiant.log.write('stonehearth_mpe', 0, 'Multiplayer Setup - No host player id detected. Skipping multiplayer setup.')
+            return
+        end
+    end
+    -- Open game to remote players if specified
+    if game_options.remote_connections_enabled then
+        stonehearth.session_server:set_remote_connections_enabled(true)
+        radiant.log.write('stonehearth_mpe', 0, 'Multiplayer Setup - Enabled remote connections')
+    end
+
+    -- Set max number of remote players if specified
+    if game_options.max_players then
+        stonehearth.session_server:set_max_players(game_options.max_players)
+        radiant.log.write('stonehearth_mpe', 0, 'Multiplayer Setup - Set max players = ' .. game_options.max_players)
+    end
+
+    -- Set whether clients can control game speed
+    if game_options.game_speed_anarchy_enabled then
+        stonehearth.game_speed:set_anarchy_enabled(game_options.game_speed_anarchy_enabled)
+        radiant.log.write('stonehearth_mpe', 0, 'Multiplayer Setup - Enabled client speed control')
+    end
 end
 
 local save_game_loaded = false
@@ -31,26 +67,24 @@ local save_game_loaded = false
 -- this is triggered when the saveid save_game has been loaded
 function stonehearth_mpe:_on_game_loaded()
    setup_multiplayer()
-   radiant.log.write('stonehearth_mpe', 0, 'Multiplayer initialized - Loaded Save Game')
+   radiant.log.write('stonehearth_mpe', 0, 'Multiplayer - Loaded Save Game')
 end
 
 -- this is triggered when saveid is an empty string
 -- in stonehearth_server this listener will auto generate the world
 function stonehearth_mpe:_on_headless_init() 
-    radiant.log.write('stonehearth_mpe', 0, 'Multiplayer world generation started')
+    radiant.log.write('stonehearth_mpe', 0, 'Multiplayer - World generation started')
 end
 
 -- this is triggered after world generation is completed
 function stonehearth_mpe:_on_world_generation_complete()
     setup_multiplayer()
-    radiant.log.write('stonehearth_mpe', 0, 'Multiplayer initialized - New Game')
+    radiant.log.write('stonehearth_mpe', 0, 'Multiplayer - World Generation Completed')
 end
 
 -- this is triggered when a save game isn't loaded 
 function stonehearth_mpe:_on_new_game()
-    print('new_game')
-    --local options = radiant.util.get_global_config('multiplayer.server.headless.options', {})
-    --stonehearth.game_creation:build_world(options)
+    radiant.log.write('stonehearth_mpe', 0, 'Multiplayer - New Game')
 end
 
 
@@ -59,29 +93,29 @@ function stonehearth_mpe:_on_client_join(session)
 end
 
 function stonehearth_mpe:_on_init() 
-  -- print(radiant.util.get_global_config('multiplayer', {}))
-   stonehearth_mpe._sv = stonehearth_mpe.__saved_variables:get_data()
-   radiant.service_creation_order.create_services(stonehearth_mpe, 'stonehearth_mpe', service_creation_order)
+    -- print(radiant.util.get_global_config('multiplayer', {}))
+    stonehearth_mpe._sv = stonehearth_mpe.__saved_variables:get_data()
+    stonehearth_mpe.headless_enabled = radiant.util.get_global_config('multiplayer.server.headless.enabled', false)
+    if stonehearth_mpe.headless_enabled then
+        radiant.log.write('stonehearth_mpe', 0, 'Headless mode enabled')
+    end
 
-   setup_multiplayer()
+    radiant.service_creator.create_services(stonehearth_mpe, 'stonehearth_mpe', service_creation_order)
 
-   radiant.log.write('stonehearth_mpe', 0, 'Server initialized')
+    radiant.log.write('stonehearth_mpe', 0, 'Server initialized')
 end
 
 function stonehearth_mpe:_on_required_loaded()
     monkey_patching()
 end
 
-local headless_enabled = radiant.util.get_global_config('multiplayer.server.headless.enabled', false)
-if headless_enabled then
-    radiant.events.listen(stonehearth, 'radiant:new_game', stonehearth_mpe, stonehearth_mpe._on_new_game)
-    radiant.events.listen(stonehearth_mpe, 'radiant:init', stonehearth_mpe, stonehearth_mpe._on_init)
-    radiant.events.listen(stonehearth.game_creation, 'stonehearth:world_generation_complete', stonehearth_mpe, stonehearth_mpe._on_world_generation_complete)
-    radiant.events.listen(radiant, 'radiant:game_loaded', stonehearth_mpe, stonehearth_mpe._on_game_loaded)
-    radiant.events.listen(radiant, 'radiant:client_joined', stonehearth_mpe, stonehearth_mpe._on_client_join)
-    radiant.events.listen(radiant, 'radiant:headless:init', stonehearth_mpe, stonehearth_mpe._on_headless_init)
-    radiant.events.listen(radiant, 'radiant:required_loaded', stonehearth_mpe, stonehearth_mpe._on_required_loaded)
-end
+radiant.events.listen(stonehearth, 'radiant:new_game', stonehearth_mpe, stonehearth_mpe._on_new_game)
+radiant.events.listen(stonehearth_mpe, 'radiant:init', stonehearth_mpe, stonehearth_mpe._on_init)
+radiant.events.listen(stonehearth.game_creation, 'stonehearth:world_generation_complete', stonehearth_mpe, stonehearth_mpe._on_world_generation_complete)
+radiant.events.listen(radiant, 'radiant:game_loaded', stonehearth_mpe, stonehearth_mpe._on_game_loaded)
+radiant.events.listen(radiant, 'radiant:client_joined', stonehearth_mpe, stonehearth_mpe._on_client_join)
+radiant.events.listen(radiant, 'radiant:headless:init', stonehearth_mpe, stonehearth_mpe._on_headless_init)
+radiant.events.listen(radiant, 'radiant:required_loaded', stonehearth_mpe, stonehearth_mpe._on_required_loaded)
 
 local event_test = {
     'radiant:shut_down',

@@ -9,9 +9,11 @@ function PlayerService:initialize()
     if not self._sv.host_player_id then
         self._sv.host_player_id = ''
     end
-    radiant.events.listen(stonehearth.population, 'stonehearth:population:camp_placed', function() 
-        stonehearth_mpe.player:remove_host()
-    end)
+    if stonehearth_mpe.headless_enabled then
+        radiant.events.listen(stonehearth.population, 'stonehearth:population:camp_placed', function() 
+            stonehearth_mpe.player:remove_host()
+        end)
+    end
 end
 
 function PlayerService:destroy_player(player_id)
