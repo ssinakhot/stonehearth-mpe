@@ -26,7 +26,7 @@ To trigger a load on the server without restarting the server program. You can c
 ## Required Features 
 These features will set the base of the mod to allow headless server multiplayer functionality.
 
-- [ ] Headless Game Saving (Only pre-loaded save games)
+- [ ] Headless Game Saving - Possible but only in pre-loaded save games
 - [ ] Auto-Save feature
 - [X] Allow headless server to auto-generate world
 - [X] Assign first player to become host
@@ -99,24 +99,4 @@ Maybe able to use dll injection to load in the player_id as host when the game l
 ## Bugs
 
 * if you set multiplayer.remote_server.ip to a value with characters in it, it will lock the game up and not connect to remote server. you can then bind to radiant:new_game to execute your own code on a "black" screen.
-* bug with authentication on first few connections
-
-Server Logs:
-    |       server |  0 |                  simulation.core | Making authentication request with provider: steam
-    |       server |  0 |                  simulation.core | Authentication failed, removing client.
-    |       server |  0 |                  simulation.core | Removing client 0
-    |       server |  0 |                          network | Transport layer got error on read:2 End of file
-    |       server |  0 |                  simulation.core | Making authentication request with provider: steam
-    |       server |  0 |                  simulation.core | Authentication failed, removing client.
-    |       server |  0 |                  simulation.core | Removing client 0
-    |       server |  0 |                          network | Transport layer got error on read:995 The I/O operation has been aborted because of either a thread exit or an application request
-
-Client Logs:
-    2018-12-16 13:21:35.709942 |       client |  1 |                          network | client allocating new send buffer (total: 0)
-    2018-12-16 13:21:35.710940 |       client |  0 |                      client.core | Authenticating...
-    2018-12-16 13:21:36.073690 |       client |  0 |                      client.core | Notified by server of disconnect
-    2018-12-16 13:21:36.075684 |       client |  0 |                      client.core | Authentication failed: Invalid auth provider.
-    2018-12-16 13:21:36.077679 |       client |  0 |                      client.core | Disconnecting...
-    2018-12-16 13:21:36.079674 |       client |  0 |                      client.core | post-abort restart game
-    2018-12-16 13:21:36.083663 |       client |  0 |                      client.core | member variables reset
-    2018-12-16 13:21:36.085658 |       client |  0 |                      client.core | Connecting to local server...
+    There is a bug with the existing argument parser where if it sees a number, it tries to read the whole thing as a number else it reads it as a string. Placing quotes around the ip does not work.

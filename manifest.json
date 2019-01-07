@@ -2,7 +2,8 @@
    "info": {
       "name": "Stonehearth Multiplayer Enhanced",
       "namespace": "stonehearth_mpe",
-      "version": 3
+      "version": 3,
+      "steam_file_id" : "1617901275"
    },
    "author": "Bolune",
    "dependencies": [
