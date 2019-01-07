@@ -1,5 +1,4 @@
-# stonehearth_mpe 
-Stonehearth Multiplayer Enhancements
+# Multiplayer Enhancements
 
 This mod focuses on being able run a headless server and extending multiplayer modes by adding a "game master" host.
 

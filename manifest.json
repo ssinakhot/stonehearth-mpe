@@ -4,7 +4,7 @@
       "namespace": "stonehearth_mpe",
       "version": 3
    },
-   "author": "Steven Sinakhot",
+   "author": "Bolune",
    "dependencies": [
       "stonehearth",
       "radiant"
